@@ -42,21 +42,6 @@ public class OrdenREST  {
         ordenFacade.edit(entity);
     }
 
-    @DELETE
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public void remove(@PathParam("id") Integer id) {
-        Orden entidad = ordenFacade.find(id);
-        ordenFacade.remove(entidad);
-    }
-
-    @GET
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Orden find(@PathParam("id") Integer id) {
-        return ordenFacade.find(id);
-    }
-
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<Orden> findAll() {

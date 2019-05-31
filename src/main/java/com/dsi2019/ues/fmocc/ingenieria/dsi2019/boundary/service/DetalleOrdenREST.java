@@ -42,21 +42,6 @@ public class DetalleOrdenREST  {
         detalleOrdenFacade.edit(entity);
     }
 
-    @DELETE
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public void remove(@PathParam("id") Integer id) {
-        DetalleOrden entidad = detalleOrdenFacade.find(id);
-        detalleOrdenFacade.remove(entidad);
-    }
-
-    @GET
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public DetalleOrden find(@PathParam("id") Integer id) {
-        return detalleOrdenFacade.find(id);
-    }
-
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<DetalleOrden> findAll() {

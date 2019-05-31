@@ -42,21 +42,6 @@ public class ProductoREST {
         productoFacade.edit(entity);
     }
 
-    @DELETE
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public void remove(@PathParam("id") Integer id) {
-        Producto entidad = productoFacade.find(id);
-        productoFacade.remove(entidad);
-    }
-
-    @GET
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Producto find(@PathParam("id") Integer id) {
-        return productoFacade.find(id);
-    }
-
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<Producto> findAll() {

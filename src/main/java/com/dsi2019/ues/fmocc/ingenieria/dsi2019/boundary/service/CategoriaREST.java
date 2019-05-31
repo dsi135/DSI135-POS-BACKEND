@@ -42,21 +42,6 @@ public class CategoriaREST {
         categoriaFacade.edit(entity);
     }
 
-    @DELETE
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public void remove(@PathParam("id") Integer id) {
-        Categoria entidad = categoriaFacade.find(id);
-        categoriaFacade.remove(entidad);
-    }
-
-    @GET
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Categoria find(@PathParam("id") Integer id) {
-        return categoriaFacade.find(id);
-    }
-
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<Categoria> findAll() {
