@@ -46,20 +46,5 @@ public class ParametrosREST {
     @Produces({MediaType.APPLICATION_JSON})
     public List<Parametros> findAll() {
         return parametrosFacade.findAll();
-    }
-
-    @GET
-    @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public List<Parametros> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return parametrosFacade.findRange(from, to);
-    }
-
-    @GET
-    @Path("count")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Integer count() {
-        return parametrosFacade.count();
-    }
-    
+    }   
 }

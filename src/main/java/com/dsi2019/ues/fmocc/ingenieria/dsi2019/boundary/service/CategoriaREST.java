@@ -47,19 +47,4 @@ public class CategoriaREST {
     public List<Categoria> findAll() {
         return categoriaFacade.findAll();
     }
-
-    @GET
-    @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public List<Categoria> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return categoriaFacade.findRange(from, to);
-    }
-
-    @GET
-    @Path("count")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Integer count() {
-        return categoriaFacade.count();
-    }
-
 }
