@@ -29,4 +29,7 @@ public class ProductoFacade extends AbstractFacade<Producto> {
         super(Producto.class);
     }
     
+    public boolean exist(String id){
+        return em.createQuery("SELECT p FROM Producto p WHERE p.id=:id").setParameter("id", id).getSingleResult().toString().equals("1");
+    }
 }
