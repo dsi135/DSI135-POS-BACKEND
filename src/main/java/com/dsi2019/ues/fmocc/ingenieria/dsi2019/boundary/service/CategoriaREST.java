@@ -10,7 +10,6 @@ import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Categoria;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
