@@ -29,4 +29,9 @@ public class OrdenFacade extends AbstractFacade<Orden> {
         super(Orden.class);
     }
     
+    public boolean existe(Integer id){
+       return executeQuery("SELECT COUNT(r) FROM Orden r WHERE r.id=:id").setParameter("id", id)
+               .getSingleResult().toString().equals("1");
+    }
+    
 }
