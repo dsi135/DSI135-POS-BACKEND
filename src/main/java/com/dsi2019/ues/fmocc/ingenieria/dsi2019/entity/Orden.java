@@ -7,6 +7,8 @@ package com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,33 +16,33 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lordbryan
+ * @author arevalo
  */
 @Entity
 @Table(name = "orden")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Orden.findAll", query = "SELECT o FROM Orden o")
-    , @NamedQuery(name = "Orden.findById", query = "SELECT o FROM Orden o WHERE o.id = :id")
-    , @NamedQuery(name = "Orden.findByFecha", query = "SELECT o FROM Orden o WHERE o.fecha = :fecha")
-    , @NamedQuery(name = "Orden.findByMesero", query = "SELECT o FROM Orden o WHERE o.mesero = :mesero")
-    , @NamedQuery(name = "Orden.findByMesa", query = "SELECT o FROM Orden o WHERE o.mesa = :mesa")
-    , @NamedQuery(name = "Orden.findByCliente", query = "SELECT o FROM Orden o WHERE o.cliente = :cliente")
-    , @NamedQuery(name = "Orden.findByEstado", query = "SELECT o FROM Orden o WHERE o.estado = :estado")
-    , @NamedQuery(name = "Orden.findByTotal", query = "SELECT o FROM Orden o WHERE o.total = :total")
-    , @NamedQuery(name = "Orden.findByObservaciones", query = "SELECT o FROM Orden o WHERE o.observaciones = :observaciones")})
+    @NamedQuery(name = "Orden.findAll", query = "SELECT o FROM Orden o"),
+    @NamedQuery(name = "Orden.findById", query = "SELECT o FROM Orden o WHERE o.id = :id"),
+    @NamedQuery(name = "Orden.findByFecha", query = "SELECT o FROM Orden o WHERE o.fecha = :fecha"),
+    @NamedQuery(name = "Orden.findByMesero", query = "SELECT o FROM Orden o WHERE o.mesero = :mesero"),
+    @NamedQuery(name = "Orden.findByMesa", query = "SELECT o FROM Orden o WHERE o.mesa = :mesa"),
+    @NamedQuery(name = "Orden.findByCliente", query = "SELECT o FROM Orden o WHERE o.cliente = :cliente"),
+    @NamedQuery(name = "Orden.findByEstado", query = "SELECT o FROM Orden o WHERE o.estado = :estado"),
+    @NamedQuery(name = "Orden.findByTotal", query = "SELECT o FROM Orden o WHERE o.total = :total"),
+    @NamedQuery(name = "Orden.findByObservaciones", query = "SELECT o FROM Orden o WHERE o.observaciones = :observaciones")})
 public class Orden implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -66,8 +68,8 @@ public class Orden implements Serializable {
     @Size(max = 100)
     @Column(name = "observaciones")
     private String observaciones;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "orden")
-    private DetalleOrden detalleOrden;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orden")
+    private List<DetalleOrden> detalleOrdenList;
 
     public Orden() {
     }
@@ -140,12 +142,13 @@ public class Orden implements Serializable {
         this.observaciones = observaciones;
     }
 
-    public DetalleOrden getDetalleOrden() {
-        return detalleOrden;
+    @JsonbTransient
+    public List<DetalleOrden> getDetalleOrdenList() {
+        return detalleOrdenList;
     }
 
-    public void setDetalleOrden(DetalleOrden detalleOrden) {
-        this.detalleOrden = detalleOrden;
+    public void setDetalleOrdenList(List<DetalleOrden> detalleOrdenList) {
+        this.detalleOrdenList = detalleOrdenList;
     }
 
     @Override
@@ -170,7 +173,7 @@ public class Orden implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.Orden[ id=" + id + " ]";
+        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Orden[ id=" + id + " ]";
     }
     
 }

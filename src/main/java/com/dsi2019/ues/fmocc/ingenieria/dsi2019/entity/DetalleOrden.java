@@ -6,64 +6,63 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author lordbryan
+ * @author arevalo
  */
 @Entity
 @Table(name = "detalle_orden")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DetalleOrden.findAll", query = "SELECT d FROM DetalleOrden d")
-    , @NamedQuery(name = "DetalleOrden.findById", query = "SELECT d FROM DetalleOrden d WHERE d.id = :id")
-    , @NamedQuery(name = "DetalleOrden.findByCantidad", query = "SELECT d FROM DetalleOrden d WHERE d.cantidad = :cantidad")
-    , @NamedQuery(name = "DetalleOrden.findByPrecio", query = "SELECT d FROM DetalleOrden d WHERE d.precio = :precio")})
+   , @NamedQuery(name = "DetalleOrden.findById", query = "SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.id = :id")
+   , @NamedQuery(name = "DetalleOrden.findByProducto", query = "SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.producto = :producto")
+   , @NamedQuery(name = "DetalleOrden.findByCantidad", query = "SELECT d FROM DetalleOrden d WHERE d.cantidad = :cantidad")
+   , @NamedQuery(name = "DetalleOrden.findByPrecio", query = "SELECT d FROM DetalleOrden d WHERE d.precio = :precio")})
 public class DetalleOrden implements Serializable {
-
     private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "id")
-    private Integer id;
+    @EmbeddedId
+    protected DetalleOrdenPK detalleOrdenPK;
     @Column(name = "cantidad")
     private Integer cantidad;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "precio")
     private Double precio;
     @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Orden orden;
-    @JoinColumn(name = "producto", referencedColumnName = "id")
-    @ManyToOne
-    private Producto producto;
+    @JoinColumn(name = "producto", referencedColumnName = "id", insertable = false, updatable = false)
+    @OneToOne(optional = false)
+    private Producto producto1;
 
     public DetalleOrden() {
     }
 
-    public DetalleOrden(Integer id) {
-        this.id = id;
+    public DetalleOrden(DetalleOrdenPK detalleOrdenPK) {
+        this.detalleOrdenPK = detalleOrdenPK;
     }
 
-    public Integer getId() {
-        return id;
+    public DetalleOrden(int id, int producto) {
+        this.detalleOrdenPK = new DetalleOrdenPK(id, producto);
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public DetalleOrdenPK getDetalleOrdenPK() {
+        return detalleOrdenPK;
+    }
+
+    public void setDetalleOrdenPK(DetalleOrdenPK detalleOrdenPK) {
+        this.detalleOrdenPK = detalleOrdenPK;
     }
 
     public Integer getCantidad() {
@@ -90,18 +89,18 @@ public class DetalleOrden implements Serializable {
         this.orden = orden;
     }
 
-    public Producto getProducto() {
-        return producto;
+    public Producto getProducto1() {
+        return producto1;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setProducto1(Producto producto1) {
+        this.producto1 = producto1;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (detalleOrdenPK != null ? detalleOrdenPK.hashCode() : 0);
         return hash;
     }
 
@@ -112,7 +111,7 @@ public class DetalleOrden implements Serializable {
             return false;
         }
         DetalleOrden other = (DetalleOrden) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.detalleOrdenPK == null && other.detalleOrdenPK != null) || (this.detalleOrdenPK != null && !this.detalleOrdenPK.equals(other.detalleOrdenPK))) {
             return false;
         }
         return true;
@@ -120,7 +119,7 @@ public class DetalleOrden implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.DetalleOrden[ id=" + id + " ]";
+        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.DetalleOrden[ detalleOrdenPK=" + detalleOrdenPK + " ]";
     }
     
 }

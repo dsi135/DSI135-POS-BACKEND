@@ -23,17 +23,17 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lordbryan
+ * @author arevalo
  */
 @Entity
 @Table(name = "categoria")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Categoria.findAll", query = "SELECT c FROM Categoria c")
-    , @NamedQuery(name = "Categoria.findById", query = "SELECT c FROM Categoria c WHERE c.id = :id")
-    , @NamedQuery(name = "Categoria.findByNombre", query = "SELECT c FROM Categoria c WHERE c.nombre = :nombre")})
+   , @NamedQuery(name = "Categoria.findById", query = "SELECT c FROM Categoria c WHERE c.id = :id")
+   , @NamedQuery(name = "Categoria.findByNombre", query = "SELECT c FROM Categoria c WHERE c.nombre = :nombre")})
 public class Categoria implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -100,7 +100,7 @@ public class Categoria implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.Categoria[ id=" + id + " ]";
+        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Categoria[ id=" + id + " ]";
     }
     
 }

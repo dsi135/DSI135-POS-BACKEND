@@ -6,8 +6,9 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity;
 
 import java.io.Serializable;
-import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,28 +16,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lordbryan
+ * @author arevalo
  */
 @Entity
 @Table(name = "producto")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p")
-    , @NamedQuery(name = "Producto.findById", query = "SELECT p FROM Producto p WHERE p.id = :id")
-    , @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre")
-    , @NamedQuery(name = "Producto.findByPrecio", query = "SELECT p FROM Producto p WHERE p.precio = :precio")
-    , @NamedQuery(name = "Producto.findByPreparado", query = "SELECT p FROM Producto p WHERE p.preparado = :preparado")})
+   , @NamedQuery(name = "Producto.findById", query = "SELECT p FROM Producto p WHERE p.id = :id")
+   , @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre")
+   , @NamedQuery(name = "Producto.findByPrecio", query = "SELECT p FROM Producto p WHERE p.precio = :precio")
+   , @NamedQuery(name = "Producto.findByPreparado", query = "SELECT p FROM Producto p WHERE p.preparado = :preparado")})
 public class Producto implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -51,8 +51,8 @@ public class Producto implements Serializable {
     private Double precio;
     @Column(name = "preparado")
     private Boolean preparado;
-    @OneToMany(mappedBy = "producto")
-    private List<DetalleOrden> detalleOrdenList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "producto1")
+    private DetalleOrden detalleOrden;
     @JoinColumn(name = "categoria", referencedColumnName = "id")
     @ManyToOne
     private Categoria categoria;
@@ -95,14 +95,14 @@ public class Producto implements Serializable {
     public void setPreparado(Boolean preparado) {
         this.preparado = preparado;
     }
-
-    @XmlTransient
-    public List<DetalleOrden> getDetalleOrdenList() {
-        return detalleOrdenList;
+    
+    @JsonbTransient
+    public DetalleOrden getDetalleOrden() {
+        return detalleOrden;
     }
 
-    public void setDetalleOrdenList(List<DetalleOrden> detalleOrdenList) {
-        this.detalleOrdenList = detalleOrdenList;
+    public void setDetalleOrden(DetalleOrden detalleOrden) {
+        this.detalleOrden = detalleOrden;
     }
 
     public Categoria getCategoria() {
@@ -135,7 +135,7 @@ public class Producto implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.Producto[ id=" + id + " ]";
+        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Producto[ id=" + id + " ]";
     }
     
 }

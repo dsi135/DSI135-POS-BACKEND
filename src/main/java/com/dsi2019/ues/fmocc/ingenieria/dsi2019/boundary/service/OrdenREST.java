@@ -64,13 +64,16 @@ public class OrdenREST  {
     }
 
     @GET
-    @Path("nose")
     @Produces({MediaType.APPLICATION_JSON})
-    public List<Orden> findAll() {
-        return ordenFacade.findAll();
+    public Response findAll() {
+        return Response.status(Response.Status.OK)
+                .entity(ordenFacade.findAll())
+                .header("Total-Reg",1)
+                .build();
     }
 
     @GET
+    @Path("rango")
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRange(@QueryParam("first") @DefaultValue("0") Integer first,
                                @QueryParam("size") @DefaultValue("5") Integer size) {
