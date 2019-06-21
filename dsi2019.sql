@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 192.168.43.60:3306
--- Tiempo de generación: 21-06-2019 a las 04:18:13
--- Versión del servidor: 5.5.62
--- Versión de PHP: 7.2.19
+-- Host: mysql-container
+-- Generation Time: Jun 21, 2019 at 07:15 AM
+-- Server version: 5.5.62
+-- PHP Version: 7.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,34 +19,34 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `DBPOS`
+-- Database: `dsi2019`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `categoria`
+-- Table structure for table `categoria`
 --
 
 CREATE TABLE `categoria` (
-  `id` int(11) NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL,
   `nombre` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `categoria`
+-- Dumping data for table `categoria`
 --
 
 INSERT INTO `categoria` (`id`, `nombre`) VALUES
 (1, 'BEBIDAS CALIENTES'),
 (2, 'BEBIDAS FRIAS'),
-(3, 'POSTRES'),
-(4, 'PRINCIPAL');
+(5, 'PUPUSAS'),
+(8, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_orden`
+-- Table structure for table `detalle_orden`
 --
 
 CREATE TABLE `detalle_orden` (
@@ -57,7 +57,7 @@ CREATE TABLE `detalle_orden` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `detalle_orden`
+-- Dumping data for table `detalle_orden`
 --
 
 INSERT INTO `detalle_orden` (`id`, `producto`, `cantidad`, `precio`) VALUES
@@ -68,11 +68,11 @@ INSERT INTO `detalle_orden` (`id`, `producto`, `cantidad`, `precio`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `orden`
+-- Table structure for table `orden`
 --
 
 CREATE TABLE `orden` (
-  `id` int(11) NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL,
   `fecha` date DEFAULT NULL,
   `mesero` varchar(100) DEFAULT NULL,
   `mesa` int(2) DEFAULT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE `orden` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `orden`
+-- Dumping data for table `orden`
 --
 
 INSERT INTO `orden` (`id`, `fecha`, `mesero`, `mesa`, `cliente`, `estado`, `total`, `observaciones`) VALUES
@@ -94,7 +94,7 @@ INSERT INTO `orden` (`id`, `fecha`, `mesero`, `mesa`, `cliente`, `estado`, `tota
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `parametros`
+-- Table structure for table `parametros`
 --
 
 CREATE TABLE `parametros` (
@@ -106,7 +106,7 @@ CREATE TABLE `parametros` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `producto`
+-- Table structure for table `producto`
 --
 
 CREATE TABLE `producto` (
@@ -114,11 +114,11 @@ CREATE TABLE `producto` (
   `nombre` varchar(100) DEFAULT NULL,
   `precio` double DEFAULT NULL,
   `categoria` int(11) DEFAULT NULL,
-  `preparado` tinyint(1) DEFAULT NULL
+  `preparado` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `producto`
+-- Dumping data for table `producto`
 --
 
 INSERT INTO `producto` (`id`, `nombre`, `precio`, `categoria`, `preparado`) VALUES
@@ -134,17 +134,17 @@ INSERT INTO `producto` (`id`, `nombre`, `precio`, `categoria`, `preparado`) VALU
 (10, 'FROZEN', 1.35, 2, 1);
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `categoria`
+-- Indexes for table `categoria`
 --
 ALTER TABLE `categoria`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `detalle_orden`
+-- Indexes for table `detalle_orden`
 --
 ALTER TABLE `detalle_orden`
   ADD PRIMARY KEY (`id`,`producto`),
@@ -152,37 +152,53 @@ ALTER TABLE `detalle_orden`
   ADD KEY `id` (`id`) USING BTREE;
 
 --
--- Indices de la tabla `orden`
+-- Indexes for table `orden`
 --
 ALTER TABLE `orden`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `parametros`
+-- Indexes for table `parametros`
 --
 ALTER TABLE `parametros`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `producto`
+-- Indexes for table `producto`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`id`),
   ADD KEY `categoria` (`categoria`);
 
 --
--- Restricciones para tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- Filtros para la tabla `detalle_orden`
+-- AUTO_INCREMENT for table `categoria`
+--
+ALTER TABLE `categoria`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `orden`
+--
+ALTER TABLE `orden`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `detalle_orden`
 --
 ALTER TABLE `detalle_orden`
   ADD CONSTRAINT `detalle_orden_ibfk_1` FOREIGN KEY (`id`) REFERENCES `orden` (`id`),
   ADD CONSTRAINT `detalle_orden_ibfk_2` FOREIGN KEY (`producto`) REFERENCES `producto` (`id`);
 
 --
--- Filtros para la tabla `producto`
+-- Constraints for table `producto`
 --
 ALTER TABLE `producto`
   ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`categoria`) REFERENCES `categoria` (`id`);

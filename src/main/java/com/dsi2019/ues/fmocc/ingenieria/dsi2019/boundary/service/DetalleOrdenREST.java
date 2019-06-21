@@ -45,6 +45,7 @@ public class DetalleOrdenREST  {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<DetalleOrden> findAll() {
+        System.out.println(detalleOrdenFacade.findAll());
         return detalleOrdenFacade.findAll();
     }
 

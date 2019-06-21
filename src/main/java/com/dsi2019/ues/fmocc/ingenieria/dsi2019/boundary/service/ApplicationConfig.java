@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service.CORSFilter.class);
         resources.add(com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service.CategoriaREST.class);
         resources.add(com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service.DetalleOrdenREST.class);
         resources.add(com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service.OrdenREST.class);
