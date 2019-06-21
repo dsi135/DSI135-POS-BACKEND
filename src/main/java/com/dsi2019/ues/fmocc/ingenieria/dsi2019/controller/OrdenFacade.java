@@ -48,4 +48,9 @@ public class OrdenFacade extends AbstractFacade<Orden> {
                 .getResultList();
 
     }
+    
+    public List ventaProducto(Date fecha){
+        return executeQuery("SELECT r.nombre,p.cantidad FROM Producto r,DetalleOrden p, Orden o WHERE r.id=p.detalleOrdenPK.producto AND p.detalleOrdenPK.id=o.id AND o.estado=0 AND o.fecha=:fecha")
+                .setParameter("fecha", fecha, TemporalType.DATE).getResultList();
+    }
 }

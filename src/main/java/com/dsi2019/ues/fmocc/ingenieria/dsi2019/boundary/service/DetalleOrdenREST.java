@@ -48,7 +48,7 @@ public class DetalleOrdenREST {
     public Response create(@QueryParam("mesero")String mesero,
             @QueryParam("mesa") int mesa,
             @QueryParam("cliente") String cliente,
-            @QueryParam("Observaciones")String Observaciones,
+            @QueryParam("observaciones")String Observaciones,
             List<DetalleOrden> lst) {
         if (!mesero.equals("") && mesero!=null 
             && mesa>0 

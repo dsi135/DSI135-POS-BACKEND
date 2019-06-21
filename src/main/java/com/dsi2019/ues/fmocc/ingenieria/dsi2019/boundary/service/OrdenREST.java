@@ -86,7 +86,7 @@ public class OrdenREST {
     public Response Final(@PathParam("idOrden") Integer idOrden) {
         if (ordenFacade.existe(idOrden)) {
             double total = detalleOrdeFacade.Total(idOrden);
-            entity=ordenFacade.findById(idOrden);
+            entity = ordenFacade.findById(idOrden);
             entity.setEstado(Boolean.FALSE);
             entity.setTotal(total);
             ordenFacade.edit(entity);
@@ -141,6 +141,26 @@ public class OrdenREST {
                 .header("Error al cargar datos de Ventas", 1)
                 .build();
 
+    }
+
+    @GET
+    @Path("ventas/producto")
+    public Response producto(@QueryParam("fecha") String fecha) {
+        if (fecha != null && !fecha.equals("")) {
+            Date fech;
+            String[] fechas = fecha.split("-");
+            Calendar s = new GregorianCalendar();
+            s.set(Integer.parseInt(fechas[0]), Integer.parseInt(fechas[1])-1, Integer.parseInt(fechas[2]));
+            fech = s.getTime();
+            return Response.status(Response.Status.OK)
+                    .entity(ordenFacade.ventaProducto(fech))
+                    .header("Rango de Productos", 1)
+                    .build();
+
+        }
+        return Response.status(Response.Status.NOT_FOUND)
+                .header("Error en el rango de Productos", 1)
+                .build();
     }
 
 }
