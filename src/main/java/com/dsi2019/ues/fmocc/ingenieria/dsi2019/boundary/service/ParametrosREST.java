@@ -46,5 +46,12 @@ public class ParametrosREST {
     @Produces({MediaType.APPLICATION_JSON})
     public List<Parametros> findAll() {
         return parametrosFacade.findAll();
-    }   
+    } 
+    
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Parametros findbyId(@PathParam("id") int id) {
+        return parametrosFacade.findById(id);
+    }
 }
