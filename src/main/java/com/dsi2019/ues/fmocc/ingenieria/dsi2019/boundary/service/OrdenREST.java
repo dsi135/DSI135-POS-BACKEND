@@ -5,12 +5,11 @@
  */
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service;
 
+import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.DetalleOrdenFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.OrdenFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Orden;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,17 +26,21 @@ import javax.ws.rs.core.Response;
  * @author kevin
  */
 @Path("ordenes")
-public class OrdenREST  {
+public class OrdenREST {
 
     @EJB
     OrdenFacade ordenFacade;
+    @EJB
+    DetalleOrdenFacade detalleOrdeFacade;
 
-     @POST
+    Orden entity;
+
+    @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response create(Orden entity) {
-        if (entity!=null) {
-            entity=ordenFacade.create(entity);
+        if (entity != null) {
+            entity = ordenFacade.create(entity);
             return Response.status(Response.Status.CREATED)
                     .entity(entity)
                     .header("Registro Creado", entity)
@@ -46,13 +49,13 @@ public class OrdenREST  {
         return Response.status(Response.Status.NOT_FOUND)
                 .header("Error al Crear", 1).build();
     }
-    
+
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response edit(@PathParam("id") Integer id, Orden entity) {
-        if (ordenFacade.existe(id) && entity!=null) {
+        if (ordenFacade.existe(id) && entity != null) {
             ordenFacade.edit(entity);
             return Response.status(Response.Status.OK)
                     .entity(entity)
@@ -67,8 +70,8 @@ public class OrdenREST  {
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll() {
         return Response.status(Response.Status.OK)
-                .entity(ordenFacade.findAll())
-                .header("Total-Reg",1)
+                .entity(ordenFacade.find())
+                .header("Total-Reg", ordenFacade.find().size())
                 .build();
     }
 
@@ -76,10 +79,10 @@ public class OrdenREST  {
     @Path("rango")
     @Produces({MediaType.APPLICATION_JSON})
     public Response findRange(@QueryParam("first") @DefaultValue("0") Integer first,
-                               @QueryParam("size") @DefaultValue("5") Integer size) {
-        
+            @QueryParam("size") @DefaultValue("5") Integer size) {
+
         return Response.ok(ordenFacade.findRange(first, size))
-                .header("Total-Reg",ordenFacade.findRange(first, size).size())
+                .header("Total-Reg", ordenFacade.findRange(first, size).size())
                 .build();
     }
 
@@ -89,5 +92,26 @@ public class OrdenREST  {
     public Integer count() {
         return ordenFacade.count();
     }
-    
+
+    @PUT
+    @Path("finalizar/{idOrden}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response Final(@PathParam("idOrden") Integer idOrden) {
+        if (ordenFacade.existe(idOrden)) {
+            double total = detalleOrdeFacade.Total(idOrden);
+            entity=ordenFacade.findById(idOrden);
+            entity.setEstado(Boolean.FALSE);
+            entity.setTotal(total);
+            ordenFacade.edit(entity);
+            return Response.status(Response.Status.OK)
+                    .entity(entity)
+                    .header("Finalizar Orden", idOrden)
+                    .build();
+
+        }
+        return Response.status(Response.Status.NOT_FOUND)
+                .header("Error al Finalizar Orden", idOrden)
+                .build();
+    }
+
 }

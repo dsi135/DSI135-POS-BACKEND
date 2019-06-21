@@ -6,6 +6,7 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller;
 
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Orden;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,10 +29,14 @@ public class OrdenFacade extends AbstractFacade<Orden> {
     public OrdenFacade() {
         super(Orden.class);
     }
-    
-    public boolean existe(Integer id){
-       return executeQuery("SELECT COUNT(r) FROM Orden r WHERE r.id=:id").setParameter("id", id)
-               .getSingleResult().toString().equals("1");
+
+    public boolean existe(Integer id) {
+        return executeQuery("SELECT COUNT(r) FROM Orden r WHERE r.id=:id").setParameter("id", id)
+                .getSingleResult().toString().equals("1");
     }
     
+    public List find(){
+        return executeQuery("SELECT o FORM Orden o WHERE o.estado=true").getResultList();
+    }
+
 }

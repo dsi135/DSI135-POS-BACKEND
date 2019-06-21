@@ -7,11 +7,8 @@ package com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service;
 
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.ProductoFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Producto;
-import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Producto;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
