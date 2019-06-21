@@ -54,7 +54,7 @@ public class ProductoRestTest {
     @Test
     public void editTest(){
         doCallRealMethod().when(productorest).edit(any(Integer.class), any(Producto.class));
-        when(productofacade.exist(any(String.class))).thenReturn(Boolean.TRUE);
+        when(productofacade.exist(any(Integer.class))).thenReturn(Boolean.TRUE);
         assertEquals(200, productorest.edit(1, producto).getStatus());
         
         assertEquals(404,productorest.edit(1,null).getStatus());

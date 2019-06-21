@@ -29,7 +29,7 @@ public class CategoriaFacade extends AbstractFacade<Categoria> {
         super(Categoria.class);
     }
     
-    public boolean exist(String id){
+    public boolean exist(Integer id){
         return executeQuery("SELECT COUNT(c) FROM Categoria c WHERE c.id=:id")
                 .setParameter("id", id).getSingleResult().toString().equals("1");
     }

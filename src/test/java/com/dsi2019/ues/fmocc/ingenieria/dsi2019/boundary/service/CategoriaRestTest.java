@@ -53,7 +53,7 @@ public class CategoriaRestTest {
     @Test
     public void editTest() {
         doCallRealMethod().when(catrest).edit(any(Integer.class), any(Categoria.class));
-        when(catfacade.exist(any(String.class))).thenReturn(Boolean.TRUE);
+        when(catfacade.exist(any(Integer.class))).thenReturn(Boolean.TRUE);
         assertEquals(200, catrest.edit(1, cat).getStatus());
 
         assertEquals(404, catrest.edit(1, null).getStatus());

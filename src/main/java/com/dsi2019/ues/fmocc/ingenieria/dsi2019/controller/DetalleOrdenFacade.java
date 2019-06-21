@@ -6,6 +6,7 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller;
 
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.DetalleOrden;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -34,4 +35,18 @@ public class DetalleOrdenFacade extends AbstractFacade<DetalleOrden> {
                 .setParameter("id", id).getSingleResult().toString().equals("1");
     }
     
+     public double Total(Integer id) {
+        double total = 0;
+        List<Double> precios = executeQuery("SELECT d.precio FROM DetalleOrden d WHERE d.detalleOrdenPK.id=:id").setParameter("id", id).getResultList();
+        if (precios != null && precios.size() > 0 && !precios.equals("")) {
+            for (Double precio : precios) {
+                total=total+precio;
+            }
+        }
+        return total;
+    }
+     public List<DetalleOrden> entidad(Integer id){
+         return executeQuery("SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.id=:id")
+                 .setParameter("id", id).getResultList();
+     }
 }

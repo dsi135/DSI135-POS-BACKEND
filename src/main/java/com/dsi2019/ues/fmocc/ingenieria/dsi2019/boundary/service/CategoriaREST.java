@@ -50,7 +50,7 @@ public class CategoriaREST {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response edit(@PathParam("id") Integer id, Categoria entity) {
-        if (categoriaFacade.exist(String.valueOf(id)) && entity!=null) {
+        if (categoriaFacade.exist(id) && entity!=null) {
             categoriaFacade.edit(entity);
             return Response.status(Response.Status.OK)
                     .entity(entity)

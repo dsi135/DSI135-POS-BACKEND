@@ -7,11 +7,8 @@ package com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service;
 
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.ProductoFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Producto;
-import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Producto;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -53,7 +50,7 @@ public class ProductoREST {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response edit(@PathParam("id") Integer id, Producto entity) {
-        if (productoFacade.exist(String.valueOf(id)) && entity!=null) {
+        if (productoFacade.exist(id) && entity!=null) {
             productoFacade.edit(entity);
             return Response.status(Response.Status.OK)
                     .entity(entity)
