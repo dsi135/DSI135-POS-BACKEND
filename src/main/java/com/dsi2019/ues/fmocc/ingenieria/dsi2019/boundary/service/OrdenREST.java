@@ -8,7 +8,11 @@ package com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.DetalleOrdenFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.OrdenFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Orden;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -35,21 +39,6 @@ public class OrdenREST {
     DetalleOrdenFacade detalleOrdeFacade;
 
     Orden entity;
-
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response create(Orden entity) {
-        if (entity != null) {
-            entity = ordenFacade.create(entity);
-            return Response.status(Response.Status.CREATED)
-                    .entity(entity)
-                    .header("Registro Creado", entity)
-                    .build();
-        }
-        return Response.status(Response.Status.NOT_FOUND)
-                .header("Error al Crear", 1).build();
-    }
 
     @PUT
     @Path("{id}")
@@ -100,7 +89,7 @@ public class OrdenREST {
     public Response Final(@PathParam("idOrden") Integer idOrden) {
         if (ordenFacade.existe(idOrden)) {
             double total = detalleOrdeFacade.Total(idOrden);
-            entity=ordenFacade.findById(idOrden);
+            entity = ordenFacade.findById(idOrden);
             entity.setEstado(Boolean.FALSE);
             entity.setTotal(total);
             ordenFacade.edit(entity);
@@ -114,27 +103,47 @@ public class OrdenREST {
                 .header("Error al Finalizar Orden", idOrden)
                 .build();
     }
-    
+
     @GET
     @Path("Ventas")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response ventas(@QueryParam("inicio")long inicio,
-            @QueryParam("fin")long fin){
-        System.out.println("inicio:"+inicio);
-        System.out.println("fin:"+fin);
-        if (inicio>0 && fin >0) {
-            System.out.println("inicio : "+new Date(inicio)+"  fin : "+new Date(fin));
+    public Response ventas(@QueryParam("init") String init, @QueryParam("fina") String fina) {
+        int anio, mes, dia;
+        String[] fechas;
+        Date inicio = new Date();
+        Date fin = new Date();
+        Calendar s = new GregorianCalendar();
+        for (int i = 0; i < 2; i++) {
+            if (i == 0) {
+                fechas = init.split("-");
+            } else {
+                fechas = fina.split("-");
+            }
+            anio = Integer.parseInt(fechas[0]);
+            mes = Integer.parseInt(fechas[1]) - 1;
+            dia = Integer.parseInt(fechas[2]);
+            s.set(anio, mes, dia);
+            if (i == 0) {
+                inicio = s.getTime();
+            } else {
+                fin = s.getTime();
+                if (fin.after((new Date(System.currentTimeMillis())))) {
+                    fin = (new Date(System.currentTimeMillis()));
+                }
+            }
+        }
+        if (inicio != null && fin != null) {
             return Response.status(Response.Status.OK)
-                    .entity(ordenFacade.ventas(new Date(inicio), new Date(fin)))
+                    .entity(ordenFacade.ventas(inicio, fin))
                     .header("Datos de Ventas", 1)
                     .build();
         }
         System.out.println("fallo ----");
-        System.out.println("inicio : "+new Date(inicio)+"  fin : "+new Date(fin));
+        System.out.println("inicio : " + inicio + "  fin : " + fin);
         return Response.status(Response.Status.NOT_FOUND)
-                    .header("Error al cargar datos de Ventas", 1)
-                    .build();
-        
+                .header("Error al cargar datos de Ventas", 1)
+                .build();
+
     }
 
 }
