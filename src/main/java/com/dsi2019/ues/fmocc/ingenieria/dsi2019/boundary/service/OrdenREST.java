@@ -8,6 +8,7 @@ package com.dsi2019.ues.fmocc.ingenieria.dsi2019.boundary.service;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.DetalleOrdenFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.OrdenFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Orden;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -112,6 +113,28 @@ public class OrdenREST {
         return Response.status(Response.Status.NOT_FOUND)
                 .header("Error al Finalizar Orden", idOrden)
                 .build();
+    }
+    
+    @GET
+    @Path("Ventas")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response ventas(@QueryParam("inicio")long inicio,
+            @QueryParam("fin")long fin){
+        System.out.println("inicio:"+inicio);
+        System.out.println("fin:"+fin);
+        if (inicio>0 && fin >0) {
+            System.out.println("inicio : "+new Date(inicio)+"  fin : "+new Date(fin));
+            return Response.status(Response.Status.OK)
+                    .entity(ordenFacade.ventas(new Date(inicio), new Date(fin)))
+                    .header("Datos de Ventas", 1)
+                    .build();
+        }
+        System.out.println("fallo ----");
+        System.out.println("inicio : "+new Date(inicio)+"  fin : "+new Date(fin));
+        return Response.status(Response.Status.NOT_FOUND)
+                    .header("Error al cargar datos de Ventas", 1)
+                    .build();
+        
     }
 
 }
