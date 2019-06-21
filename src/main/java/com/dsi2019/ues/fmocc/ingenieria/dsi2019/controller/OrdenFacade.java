@@ -6,10 +6,12 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller;
 
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Orden;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -36,7 +38,14 @@ public class OrdenFacade extends AbstractFacade<Orden> {
     }
     
     public List find(){
-        return executeQuery("SELECT o FORM Orden o WHERE o.estado=true").getResultList();
+        return executeQuery("SELECT o FROM Orden o WHERE o.estado=1").getResultList();
     }
+    
+    public List<Orden> ventas(Date inicio, Date fin){
+        return executeQuery("SELECT DISTINCT(SUM(o.total)) FROM Orden o WHERE o.estado=0 AND o.fecha BETWEEN :inicio AND :fin")
+                .setParameter("inicio", inicio, TemporalType.DATE)
+                .setParameter("fin", fin, TemporalType.DATE)
+                .getResultList();
 
+    }
 }

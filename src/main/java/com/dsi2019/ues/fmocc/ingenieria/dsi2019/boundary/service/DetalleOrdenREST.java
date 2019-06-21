@@ -42,18 +42,34 @@ public class DetalleOrdenREST {
     @EJB
     ProductoFacade productoFacade;
     DetalleOrden entity;
-
+    Orden orden;
     @POST
     @Path("{idOrden}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(List<DetalleOrden> lst) {
-        if (ordenFacade.existe(idOrden) && lst != null) {
+    public Response create(@QueryParam("mesero")String mesero,
+            @QueryParam("mesa") int mesa,
+            @QueryParam("cliente") String cliente,
+            @QueryParam("Observaciones")String Observaciones,
+            List<DetalleOrden> lst) {
+        if (!mesero.equals("") && mesero!=null 
+            && mesa>0 
+            &&!cliente.equals("") && cliente!=null
+            &&!Observaciones.equals("") && Observaciones!=null
+                && lst != null) {
+            orden= new Orden();
+            orden.setCliente(cliente);
+            orden.setMesa(mesa);
+            orden.setMesero(mesero);
+            orden.setObservaciones(Observaciones);
+            orden=ordenFacade.create(orden);
+
             for (DetalleOrden lst1 : lst) {
                 if (productoFacade.exist(lst1.getProducto1().getId())) {
                     entity = new DetalleOrden();
                     entity.setCantidad(lst1.getCantidad());
                     entity.setPrecio(lst1.getCantidad() * lst1.getProducto1().getPrecio());
-                    entity.setDetalleOrdenPK(new DetalleOrdenPK(idOrden, lst1.getProducto1().getId()));
+                    entity.setDetalleOrdenPK(new DetalleOrdenPK(orden.getId(), lst1.getProducto1().getId()));
+
                 }
                 detalleOrdenFacade.create(entity);
             }
