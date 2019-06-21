@@ -102,7 +102,7 @@ public class OrdenREST {
     }
 
     @GET
-    @Path("Ventas")
+    @Path("ventas")
     @Produces(MediaType.APPLICATION_JSON)
     public Response ventas(@QueryParam("init") String init, @QueryParam("fina") String fina) {
         int anio, mes, dia;

@@ -44,7 +44,6 @@ public class DetalleOrdenREST {
     DetalleOrden entity;
     Orden orden;
     @POST
-    @Path("{idOrden}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(@QueryParam("mesero")String mesero,
             @QueryParam("mesa") int mesa,
