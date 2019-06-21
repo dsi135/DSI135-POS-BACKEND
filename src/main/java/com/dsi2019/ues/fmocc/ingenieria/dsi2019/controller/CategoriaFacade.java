@@ -30,6 +30,7 @@ public class CategoriaFacade extends AbstractFacade<Categoria> {
     }
     
     public boolean exist(String id){
-        return em.createQuery("SELECT c FROM Categoria c WHERE c.id=:id").setParameter("id", id).getSingleResult().toString().equals("1");
+        return executeQuery("SELECT COUNT(c) FROM Categoria c WHERE c.id=:id")
+                .setParameter("id", id).getSingleResult().toString().equals("1");
     }
 }

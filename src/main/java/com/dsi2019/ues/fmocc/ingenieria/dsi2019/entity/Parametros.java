@@ -19,18 +19,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author lordbryan
+ * @author arevalo
  */
 @Entity
 @Table(name = "parametros")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Parametros.findAll", query = "SELECT p FROM Parametros p")
-    , @NamedQuery(name = "Parametros.findById", query = "SELECT p FROM Parametros p WHERE p.id = :id")
-    , @NamedQuery(name = "Parametros.findByNombre", query = "SELECT p FROM Parametros p WHERE p.nombre = :nombre")
-    , @NamedQuery(name = "Parametros.findByValor", query = "SELECT p FROM Parametros p WHERE p.valor = :valor")})
+    @NamedQuery(name = "Parametros.findAll", query = "SELECT p FROM Parametros p"),
+    @NamedQuery(name = "Parametros.findById", query = "SELECT p FROM Parametros p WHERE p.id = :id"),
+    @NamedQuery(name = "Parametros.findByNombre", query = "SELECT p FROM Parametros p WHERE p.nombre = :nombre"),
+    @NamedQuery(name = "Parametros.findByValor", query = "SELECT p FROM Parametros p WHERE p.valor = :valor")})
 public class Parametros implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -97,7 +96,7 @@ public class Parametros implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.Parametros[ id=" + id + " ]";
+        return "com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Parametros[ id=" + id + " ]";
     }
     
 }

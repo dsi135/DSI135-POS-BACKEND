@@ -8,6 +8,7 @@ package com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 /**
  *
@@ -132,5 +133,12 @@ public abstract class AbstractFacade<T> {
         } catch (Exception e) {
             throw e;
         }
+    }
+    
+    public Query executeQuery(String query) {
+        if (getEntityManager() != null && query != null && !query.isEmpty()) {
+            return getEntityManager().createQuery(query);
+        }
+        return null;
     }
 }

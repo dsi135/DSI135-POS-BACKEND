@@ -30,6 +30,7 @@ public class ProductoFacade extends AbstractFacade<Producto> {
     }
     
     public boolean exist(String id){
-        return em.createQuery("SELECT p FROM Producto p WHERE p.id=:id").setParameter("id", id).getSingleResult().toString().equals("1");
+        return executeQuery("SELECT COUNT(p) FROM Producto p WHERE p.id=:id")
+                .setParameter("id", id).getSingleResult().toString().equals("1");
     }
 }
