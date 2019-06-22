@@ -15,6 +15,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -93,6 +94,19 @@ public class OrdenREST {
         return Response.status(Response.Status.NOT_FOUND)
                 .header("Error al Finalizar Orden", idOrden)
                 .build();
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response crearOrden(Orden orden) {
+        if (ordenFacade.existe(orden.getId())) {
+             return Response.status(Response.Status.CONFLICT).build();
+        }
+            ordenFacade.crear(orden);
+            return Response.status(Response.Status.CREATED)
+                    .entity(orden)
+                    .build();
     }
 
     @GET
