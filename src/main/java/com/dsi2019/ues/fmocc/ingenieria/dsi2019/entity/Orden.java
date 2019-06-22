@@ -22,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -68,6 +69,7 @@ public class Orden implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orden")
+    @XmlElement
     private List<DetalleOrden> detalleOrdenList;
 
     public Orden() {
@@ -141,7 +143,7 @@ public class Orden implements Serializable {
         this.observaciones = observaciones;
     }
 
-    @JsonbTransient
+    @XmlTransient
     public List<DetalleOrden> getDetalleOrdenList() {
         return detalleOrdenList;
     }

@@ -6,6 +6,7 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity;
 
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -80,7 +82,9 @@ public class DetalleOrden implements Serializable {
     public void setPrecio(Double precio) {
         this.precio = precio;
     }
-
+    
+    @XmlTransient
+    @JsonbTransient
     public Orden getOrden() {
         return orden;
     }
