@@ -12,6 +12,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TemporalType;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 
 /**
  *
@@ -43,15 +45,14 @@ public class OrdenFacade extends AbstractFacade<Orden> {
     }
     
     public List find(){
-        return executeQuery("SELECT o FROM Orden o WHERE o.estado=1").getResultList();
+        return executeQuery("SELECT o FROM Orden o WHERE o.estado=1").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
     }
     
     public List<Orden> ventas(Date inicio, Date fin){
-        return executeQuery("SELECT o.fecha,(SUM(o.total)) FROM Orden o WHERE o.estado=0 AND o.fecha BETWEEN :inicio AND :fin GROUP BY(o.fecha)")
+        return executeQuery("SELECT UPPER(FUNCTION('DATE',o.fecha)),(SUM(o.total)) FROM Orden o WHERE o.estado=0 AND o.fecha BETWEEN :inicio AND :fin GROUP BY(o.fecha)")
                 .setParameter("inicio", inicio, TemporalType.DATE)
                 .setParameter("fin", fin, TemporalType.DATE)
                 .getResultList();
-
     }
     
     public List ventaProducto(Date fecha){

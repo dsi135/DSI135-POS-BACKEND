@@ -74,12 +74,6 @@ public class OrdenREST {
                 .build();
     }
 
-    @GET
-    @Path("count")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Integer count() {
-        return ordenFacade.count();
-    }
 
     @PUT
     @Path("finalizar/{idOrden}")

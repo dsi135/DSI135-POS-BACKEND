@@ -81,11 +81,4 @@ public class ProductoREST {
                 .build();
     }
 
-    @GET
-    @Path("count")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Integer count() {
-        return productoFacade.count();
-    }
-
 }
