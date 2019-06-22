@@ -12,6 +12,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TemporalType;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 
 /**
  *
@@ -43,7 +45,7 @@ public class OrdenFacade extends AbstractFacade<Orden> {
     }
     
     public List find(){
-        return executeQuery("SELECT o FROM Orden o WHERE o.estado=1").getResultList();
+        return executeQuery("SELECT o FROM Orden o WHERE o.estado=1").setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
     }
     
     public List<Orden> ventas(Date inicio, Date fin){

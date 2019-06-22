@@ -122,18 +122,4 @@ public class DetalleOrdenREST {
         return detalleOrdenFacade.findAll();
     }
 
-    @GET
-    @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public List<DetalleOrden> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return detalleOrdenFacade.findRange(from, to);
-    }
-
-    @GET
-    @Path("count")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Integer count() {
-        return detalleOrdenFacade.count();
-    }
-
 }
