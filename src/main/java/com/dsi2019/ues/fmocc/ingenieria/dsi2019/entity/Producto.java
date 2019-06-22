@@ -6,21 +6,24 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,15 +33,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "producto")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p")
-   , @NamedQuery(name = "Producto.findById", query = "SELECT p FROM Producto p WHERE p.id = :id")
-   , @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre")
-   , @NamedQuery(name = "Producto.findByPrecio", query = "SELECT p FROM Producto p WHERE p.precio = :precio")
-   , @NamedQuery(name = "Producto.findByPreparado", query = "SELECT p FROM Producto p WHERE p.preparado = :preparado")})
+    @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p"),
+    @NamedQuery(name = "Producto.findById", query = "SELECT p FROM Producto p WHERE p.id = :id"),
+    @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre"),
+    @NamedQuery(name = "Producto.findByPrecio", query = "SELECT p FROM Producto p WHERE p.precio = :precio"),
+    @NamedQuery(name = "Producto.findByPreparado", query = "SELECT p FROM Producto p WHERE p.preparado = :preparado")})
 public class Producto implements Serializable {
-    
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
@@ -50,8 +53,8 @@ public class Producto implements Serializable {
     private Double precio;
     @Column(name = "preparado")
     private Boolean preparado;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "producto1")
-    private DetalleOrden detalleOrden;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto1")
+    private List<DetalleOrden> detalleOrdenList;
     @JoinColumn(name = "categoria", referencedColumnName = "id")
     @ManyToOne
     private Categoria categoria;
@@ -94,15 +97,14 @@ public class Producto implements Serializable {
     public void setPreparado(Boolean preparado) {
         this.preparado = preparado;
     }
-    
-    @JsonbTransient
-    public DetalleOrden getDetalleOrden() {
-        return detalleOrden;
 
+    @JsonbTransient
+    public List<DetalleOrden> getDetalleOrdenList() {
+        return detalleOrdenList;
     }
 
-    public void setDetalleOrden(DetalleOrden detalleOrden) {
-        this.detalleOrden = detalleOrden;
+    public void setDetalleOrdenList(List<DetalleOrden> detalleOrdenList) {
+        this.detalleOrdenList = detalleOrdenList;
     }
 
     public Categoria getCategoria() {

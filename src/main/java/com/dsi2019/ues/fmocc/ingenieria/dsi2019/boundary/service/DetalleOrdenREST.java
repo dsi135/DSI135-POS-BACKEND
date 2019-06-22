@@ -11,6 +11,7 @@ import com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller.ProductoFacade;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.DetalleOrden;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.DetalleOrdenPK;
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Orden;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -43,25 +44,24 @@ public class DetalleOrdenREST {
     ProductoFacade productoFacade;
     DetalleOrden entity;
     Orden orden;
+    
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response create(@QueryParam("mesero")String mesero,
             @QueryParam("mesa") int mesa,
             @QueryParam("cliente") String cliente,
-            @QueryParam("observaciones")String Observaciones,
+            @QueryParam("observaciones")String observaciones,
             List<DetalleOrden> lst) {
-        if (!mesero.equals("") && mesero!=null 
-            && mesa>0 
-            &&!cliente.equals("") && cliente!=null
-            &&!Observaciones.equals("") && Observaciones!=null
-                && lst != null) {
+        if (!mesero.equals("") && mesero!=null && mesa>0 && lst != null) {
             orden= new Orden();
             orden.setCliente(cliente);
             orden.setMesa(mesa);
             orden.setMesero(mesero);
-            orden.setObservaciones(Observaciones);
-            orden=ordenFacade.create(orden);
-
+            orden.setObservaciones(observaciones);
+            orden.setFecha(new Date());
+            orden=ordenFacade.crear(orden);
+            System.out.println("orden :"+orden);
             for (DetalleOrden lst1 : lst) {
                 if (productoFacade.exist(lst1.getProducto1().getId())) {
                     entity = new DetalleOrden();

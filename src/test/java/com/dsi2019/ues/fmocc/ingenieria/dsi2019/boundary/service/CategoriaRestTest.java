@@ -67,4 +67,11 @@ public class CategoriaRestTest {
         assertEquals(200, catrest.findRange(1, 3).getStatus());
         assertEquals("[Total-Reg]", catrest.findRange(1, 3).getHeaders().keySet().toString());
     }
+    @Test
+    public void FindAllTest(){
+        doCallRealMethod().when(catrest).findAll();
+        when(catfacade.findAll()).thenReturn(lstcat);
+        assertEquals(200, catrest.findAll().getStatus());
+        assertEquals("[Total-Reg]", catrest.findAll().getHeaders().keySet().toString());
+    }
 }
