@@ -6,6 +6,7 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity;
 
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -13,9 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -25,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "detalle_orden")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "DetalleOrden.findAll", query = "SELECT d FROM DetalleOrden d")
-   , @NamedQuery(name = "DetalleOrden.findById", query = "SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.id = :id")
-   , @NamedQuery(name = "DetalleOrden.findByProducto", query = "SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.producto = :producto")
-   , @NamedQuery(name = "DetalleOrden.findByCantidad", query = "SELECT d FROM DetalleOrden d WHERE d.cantidad = :cantidad")
-   , @NamedQuery(name = "DetalleOrden.findByPrecio", query = "SELECT d FROM DetalleOrden d WHERE d.precio = :precio")})
+    @NamedQuery(name = "DetalleOrden.findAll", query = "SELECT d FROM DetalleOrden d"),
+    @NamedQuery(name = "DetalleOrden.findById", query = "SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.id = :id"),
+    @NamedQuery(name = "DetalleOrden.findByProducto", query = "SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.producto = :producto"),
+    @NamedQuery(name = "DetalleOrden.findByCantidad", query = "SELECT d FROM DetalleOrden d WHERE d.cantidad = :cantidad"),
+    @NamedQuery(name = "DetalleOrden.findByPrecio", query = "SELECT d FROM DetalleOrden d WHERE d.precio = :precio")})
 public class DetalleOrden implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -43,7 +44,7 @@ public class DetalleOrden implements Serializable {
     @ManyToOne(optional = false)
     private Orden orden;
     @JoinColumn(name = "producto", referencedColumnName = "id", insertable = false, updatable = false)
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Producto producto1;
 
     public DetalleOrden() {
@@ -80,7 +81,9 @@ public class DetalleOrden implements Serializable {
     public void setPrecio(Double precio) {
         this.precio = precio;
     }
-
+    
+    @XmlTransient
+    @JsonbTransient
     public Orden getOrden() {
         return orden;
     }

@@ -31,6 +31,11 @@ public class OrdenFacade extends AbstractFacade<Orden> {
     public OrdenFacade() {
         super(Orden.class);
     }
+    
+    public Orden crear(Orden entity){
+        create(entity);
+        return entity;
+    }
 
     public boolean existe(Integer id) {
         return executeQuery("SELECT COUNT(r) FROM Orden r WHERE r.id=:id").setParameter("id", id)
