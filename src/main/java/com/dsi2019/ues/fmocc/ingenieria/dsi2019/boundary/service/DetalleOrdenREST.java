@@ -44,24 +44,25 @@ public class DetalleOrdenREST {
     ProductoFacade productoFacade;
     DetalleOrden entity;
     Orden orden;
-    
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response create(@QueryParam("mesero")String mesero,
+    public Response create(@QueryParam("mesero") String mesero,
             @QueryParam("mesa") int mesa,
             @QueryParam("cliente") String cliente,
-            @QueryParam("observaciones")String observaciones,
+            @QueryParam("observaciones") String observaciones,
             List<DetalleOrden> lst) {
-        if (!mesero.equals("") && mesero!=null && mesa>0 && lst != null) {
-            orden= new Orden();
+        if (!mesero.equals("") && mesero != null && mesa > 0 && lst != null) {
+            orden = new Orden();
+            orden.setEstado(true);
             orden.setCliente(cliente);
             orden.setMesa(mesa);
             orden.setMesero(mesero);
             orden.setObservaciones(observaciones);
             orden.setFecha(new Date());
-            orden=ordenFacade.crear(orden);
-            System.out.println("orden :"+orden);
+            orden = ordenFacade.crear(orden);
+            System.out.println("orden :" + orden);
             for (DetalleOrden lst1 : lst) {
                 if (productoFacade.exist(lst1.getProducto1().getId())) {
                     entity = new DetalleOrden();
@@ -87,14 +88,14 @@ public class DetalleOrdenREST {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response edit(List<DetalleOrden> lst) {
         if (ordenFacade.existe(idOrden) && lst != null) {
-            List<DetalleOrden> esperado=detalleOrdenFacade.entidad(idOrden);
-            if (!esperado.equals("") && esperado!= null) {
+            List<DetalleOrden> esperado = detalleOrdenFacade.entidad(idOrden);
+            if (!esperado.equals("") && esperado != null) {
                 for (DetalleOrden esperado1 : esperado) {
                     entity = new DetalleOrden();
                     entity.setDetalleOrdenPK(new DetalleOrdenPK(idOrden, esperado1.getProducto1().getId()));
                     detalleOrdenFacade.remove(entity);
                 }
-                
+
                 for (DetalleOrden lst1 : lst) {
                     if (productoFacade.exist(lst1.getProducto1().getId())) {
                         entity = new DetalleOrden();
