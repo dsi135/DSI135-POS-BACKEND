@@ -37,17 +37,7 @@ public class OrdenRestTest {
         list.add(orden);
         list.add(orden);
     }
-    @Test
-    public void editTest(){
-        doCallRealMethod().when(ordenRest).edit(any(Integer.class), any(Orden.class));
-        assertEquals(200,ordenRest.edit(1,orden).getStatus());
-        assertEquals("[Registro Modificado]", ordenRest.edit(1, orden).getHeaders().keySet().toString());
-        
-        assertEquals(404,ordenRest.edit(1,null).getStatus());
-        assertEquals("[Error al Modificar]", ordenRest.edit(1, null).getHeaders().keySet().toString());
-        
-    }
-    
+
     @Test
     public void findAllTest(){
         doCallRealMethod().when(ordenRest).findAll();

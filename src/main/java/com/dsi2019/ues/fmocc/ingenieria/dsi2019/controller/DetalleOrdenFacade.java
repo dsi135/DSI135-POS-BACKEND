@@ -27,8 +27,7 @@ public class DetalleOrdenFacade extends AbstractFacade<DetalleOrden> {
 
     @PersistenceContext(unitName = "com.dsi2019.ues.fmocc.ingenieria_dsi2019_war_1.0-SNAPSHOTPU")
     private EntityManager em;
-    DetalleOrden entity;
-
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
@@ -44,35 +43,8 @@ public class DetalleOrdenFacade extends AbstractFacade<DetalleOrden> {
     }
 
     public double Total(Integer id) {
-        double total = 0;
-        List<Double> precios = executeQuery("SELECT d.precio FROM DetalleOrden d WHERE d.detalleOrdenPK.id=:id").setParameter("id", id).getResultList();
-        if (precios != null && precios.size() > 0 && !precios.equals("")) {
-            for (Double precio : precios) {
-                total = total + precio;
-            }
-        }
+        double total = Double.parseDouble(executeQuery("SELECT SUM(d.precio) FROM DetalleOrden d WHERE d.detalleOrdenPK.id=:id").setParameter("id", id).getSingleResult().toString());
         return total;
-    }
-
-    @EJB
-    DetalleOrdenFacade detalleOrdenFacade;
-    @EJB
-    ProductoFacade productoFacade;
-
-    public Response EditarOrden(Orden orden, List<DetalleOrden> lst) {
-        for (DetalleOrden lst1 : lst) {
-            if (productoFacade.exist(lst1.getProducto1().getId())) {
-                entity = new DetalleOrden();
-                entity.setCantidad(lst1.getCantidad());
-                entity.setPrecio(lst1.getCantidad() * lst1.getProducto1().getPrecio());
-                entity.setDetalleOrdenPK(new DetalleOrdenPK(orden.getId(), lst1.getProducto1().getId()));
-            }
-            detalleOrdenFacade.create(entity);
-        }
-        return Response.status(Response.Status.OK)
-                .header("Registro Creado", lst.size())
-                .build();
-
     }
 
     public List<DetalleOrden> entidad(Integer id) {

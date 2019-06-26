@@ -12,10 +12,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.ejb.EJB;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -38,22 +36,6 @@ public class OrdenREST {
 
     Orden entity;
 
-    @PUT
-    @Path("{id}")
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response edit(@PathParam("id") Integer id, Orden entity) {
-        if (ordenFacade.existe(id) && entity != null) {
-            ordenFacade.edit(entity);
-            return Response.status(Response.Status.OK)
-                    .entity(entity)
-                    .header("Registro Modificado", id)
-                    .build();
-        }
-        return Response.status(Response.Status.NOT_FOUND)
-                .header("Error al Modificar", 1).build();
-    }
-
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findAll() {
@@ -74,16 +56,13 @@ public class OrdenREST {
                 .build();
     }
 
-
     @PUT
     @Path("finalizar/{idOrden}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response Final(@PathParam("idOrden") Integer idOrden) {
         if (ordenFacade.existe(idOrden)) {
-            double total = detalleOrdeFacade.Total(idOrden);
             entity = ordenFacade.findById(idOrden);
             entity.setEstado(Boolean.FALSE);
-            entity.setTotal(total);
             ordenFacade.edit(entity);
             return Response.status(Response.Status.OK)
                     .entity(entity)
@@ -94,19 +73,6 @@ public class OrdenREST {
         return Response.status(Response.Status.NOT_FOUND)
                 .header("Error al Finalizar Orden", idOrden)
                 .build();
-    }
-    
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response crearOrden(Orden orden) {
-        if (ordenFacade.existe(orden.getId())) {
-             return Response.status(Response.Status.CONFLICT).build();
-        }
-            ordenFacade.crear(orden);
-            return Response.status(Response.Status.CREATED)
-                    .entity(orden)
-                    .build();
     }
 
     @GET
@@ -170,5 +136,4 @@ public class OrdenREST {
                 .header("Error en el rango de Productos", 1)
                 .build();
     }
-
 }

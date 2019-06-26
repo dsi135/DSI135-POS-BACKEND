@@ -45,6 +45,7 @@ public class DetalleOrdenREST {
     ProductoFacade productoFacade;
     Response envio;
     Orden orden;
+    DetalleOrden entity;
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
@@ -56,8 +57,8 @@ public class DetalleOrdenREST {
             @QueryParam("idcuenta") @DefaultValue("0") int idcuenta,
             List<DetalleOrden> lst) {
         if (!mesero.equals("") && mesero != null && mesa > 0 && lst != null) {
+            orden = new Orden();
             if (idcuenta == 0) {
-                orden = new Orden();
                 orden.setEstado(true);
                 orden.setCliente(cliente);
                 orden.setMesa(mesa);
@@ -65,18 +66,24 @@ public class DetalleOrdenREST {
                 orden.setObservaciones(observaciones);
                 orden.setFecha(new Date());
                 orden = ordenFacade.crear(orden);
-                idcuenta = orden.getId();
             } else {
-                System.out.println("SE BORRO");
+                orden = ordenFacade.findById(idcuenta);
+                orden.setObservaciones(observaciones);
+                ordenFacade.edit(orden);
                 detalleOrdenFacade.removeDetalle(idcuenta);
             }
-            System.out.println("orden :" + orden);
-
+            idcuenta = orden.getId();
             for (DetalleOrden lst1 : lst) {
-                lst1.setDetalleOrdenPK(new DetalleOrdenPK(idcuenta, lst1.getProducto1().getId()));
-                detalleOrdenFacade.create(lst1);
+                if (productoFacade.exist(lst1.getProducto1().getId())) {
+                    entity = new DetalleOrden();
+                    entity.setCantidad(lst1.getCantidad());
+                    entity.setPrecio(lst1.getCantidad() * lst1.getProducto1().getPrecio());
+                    entity.setDetalleOrdenPK(new DetalleOrdenPK(orden.getId(), lst1.getProducto1().getId()));
+                }
+                detalleOrdenFacade.create(entity);
             }
-            
+            orden.setTotal(detalleOrdenFacade.Total(idcuenta));
+            ordenFacade.edit(orden);
             return Response.status(Response.Status.OK)
                     .header("Registro Creado", lst.size())
                     .build();
@@ -87,25 +94,6 @@ public class DetalleOrdenREST {
                 .build();
 
     }
-    
-    @PUT
-    @Path("edit/{idOrden}")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response edit(@PathParam("idOrden") Integer id,
-            @QueryParam("observaciones") @DefaultValue("")String observaciones,
-            List<DetalleOrden> lst) {
-        if (ordenFacade.existe(id) && lst!=null && !lst.equals("")) {
-            orden=ordenFacade.findById(id);
-            orden.setObservaciones(observaciones);
-            ordenFacade.edit(orden);
-            detalleOrdenFacade.elim(orden.getId());
-            envio=detalleOrdenFacade.EditarOrden(orden, lst);
-            return envio;
-        }
-        return Response.status(Response.Status.NOT_FOUND)
-                .header("Fallo editarOrden", 1)
-                .build();
-    }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -113,5 +101,5 @@ public class DetalleOrdenREST {
         System.out.println(detalleOrdenFacade.findAll());
         return detalleOrdenFacade.findAll();
     }
-    
+
 }
