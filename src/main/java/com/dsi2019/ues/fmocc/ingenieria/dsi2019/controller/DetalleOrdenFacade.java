@@ -37,49 +37,53 @@ public class DetalleOrdenFacade extends AbstractFacade<DetalleOrden> {
     public DetalleOrdenFacade() {
         super(DetalleOrden.class);
     }
-    
-    public  boolean existe(Integer id){
+
+    public boolean existe(Integer id) {
         return executeQuery("SELECT COUNT(d) FROM DetalleOrden d WHERE d")
                 .setParameter("id", id).getSingleResult().toString().equals("1");
     }
-    
-     public double Total(Integer id) {
+
+    public double Total(Integer id) {
         double total = 0;
         List<Double> precios = executeQuery("SELECT d.precio FROM DetalleOrden d WHERE d.detalleOrdenPK.id=:id").setParameter("id", id).getResultList();
         if (precios != null && precios.size() > 0 && !precios.equals("")) {
             for (Double precio : precios) {
-                total=total+precio;
+                total = total + precio;
             }
         }
         return total;
     }
-     public List<DetalleOrden> entidad(Integer id){
-         return executeQuery("SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.id=:id")
-                 .setParameter("id", id).getResultList();
-     }
-     
-     public void elim(Integer id){
-         em.createQuery("DELETE FROM DetalleOrden a WHERE a.detalleOrdenPK.id=:id")
-                 .setParameter("id", id)
-                 .executeUpdate();
-     }
-    @EJB 
+
+    @EJB
     DetalleOrdenFacade detalleOrdenFacade;
     @EJB
     ProductoFacade productoFacade;
-     public Response EditarOrden(Orden orden,List<DetalleOrden> lst){
-            for (DetalleOrden lst1 : lst) {
-                if (productoFacade.exist(lst1.getProducto1().getId())) {
-                    entity = new DetalleOrden();
-                    entity.setCantidad(lst1.getCantidad());
-                    entity.setPrecio(lst1.getCantidad() * lst1.getProducto1().getPrecio());
-                    entity.setDetalleOrdenPK(new DetalleOrdenPK(orden.getId(), lst1.getProducto1().getId()));
-                }
-                detalleOrdenFacade.create(entity);
+
+    public Response EditarOrden(Orden orden, List<DetalleOrden> lst) {
+        for (DetalleOrden lst1 : lst) {
+            if (productoFacade.exist(lst1.getProducto1().getId())) {
+                entity = new DetalleOrden();
+                entity.setCantidad(lst1.getCantidad());
+                entity.setPrecio(lst1.getCantidad() * lst1.getProducto1().getPrecio());
+                entity.setDetalleOrdenPK(new DetalleOrdenPK(orden.getId(), lst1.getProducto1().getId()));
             }
-            return Response.status(Response.Status.OK)
-                    .header("Registro Creado", lst.size())
-                    .build();
-         
-     }
+            detalleOrdenFacade.create(entity);
+        }
+        return Response.status(Response.Status.OK)
+                .header("Registro Creado", lst.size())
+                .build();
+
+    }
+
+    public List<DetalleOrden> entidad(Integer id) {
+        return executeQuery("SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.id=:id")
+                .setParameter("id", id).getResultList();
+    }
+
+    public void removeDetalle(int id) {
+        executeQuery("DELETE FROM DetalleOrden a WHERE a.detalleOrdenPK.id= :id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
 }

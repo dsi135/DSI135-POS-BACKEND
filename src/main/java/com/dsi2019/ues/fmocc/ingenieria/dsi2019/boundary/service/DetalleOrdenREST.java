@@ -53,19 +53,34 @@ public class DetalleOrdenREST {
             @QueryParam("mesa") int mesa,
             @QueryParam("cliente") String cliente,
             @QueryParam("observaciones") String observaciones,
+            @QueryParam("idcuenta") @DefaultValue("0") int idcuenta,
             List<DetalleOrden> lst) {
         if (!mesero.equals("") && mesero != null && mesa > 0 && lst != null) {
-            orden = new Orden();
-            orden.setEstado(true);
-            orden.setCliente(cliente);
-            orden.setMesa(mesa);
-            orden.setMesero(mesero);
-            orden.setObservaciones(observaciones);
-            orden.setFecha(new Date());
-            orden = ordenFacade.crear(orden);
+            if (idcuenta == 0) {
+                orden = new Orden();
+                orden.setEstado(true);
+                orden.setCliente(cliente);
+                orden.setMesa(mesa);
+                orden.setMesero(mesero);
+                orden.setObservaciones(observaciones);
+                orden.setFecha(new Date());
+                orden = ordenFacade.crear(orden);
+                idcuenta = orden.getId();
+            } else {
+                System.out.println("SE BORRO");
+                detalleOrdenFacade.removeDetalle(idcuenta);
+            }
             System.out.println("orden :" + orden);
-            envio=detalleOrdenFacade.EditarOrden(orden, lst);
-            return envio;
+
+            for (DetalleOrden lst1 : lst) {
+                lst1.setDetalleOrdenPK(new DetalleOrdenPK(idcuenta, lst1.getProducto1().getId()));
+                detalleOrdenFacade.create(lst1);
+            }
+            
+            return Response.status(Response.Status.OK)
+                    .header("Registro Creado", lst.size())
+                    .build();
+
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .header("Error al crear", lst.size())
