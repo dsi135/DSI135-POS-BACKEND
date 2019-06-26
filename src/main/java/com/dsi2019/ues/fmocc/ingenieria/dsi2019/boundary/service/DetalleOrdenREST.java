@@ -16,6 +16,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -76,17 +77,13 @@ public class DetalleOrdenREST {
     @Path("edit/{idOrden}")
     @Consumes({MediaType.APPLICATION_JSON})
     public Response edit(@PathParam("idOrden") Integer id,
-            @QueryParam("mesero") String mesero,
-            @QueryParam("mesa") int mesa,
-            @QueryParam("cliente") String cliente,
-            @QueryParam("observaciones") String observaciones,
+            @QueryParam("observaciones") @DefaultValue("")String observaciones,
             List<DetalleOrden> lst) {
-        if (mesero!=null && !mesero.equals("") && mesa>0 && ordenFacade.existe(id) && lst!=null && !lst.equals("")) {
-            orden.setCliente(cliente);
-            orden.setMesa(mesa);
-            orden.setMesero(mesero);
+        if (ordenFacade.existe(id) && lst!=null && !lst.equals("")) {
+            orden=ordenFacade.findById(id);
             orden.setObservaciones(observaciones);
             ordenFacade.edit(orden);
+            detalleOrdenFacade.elim(orden.getId());
             envio=detalleOrdenFacade.EditarOrden(orden, lst);
             return envio;
         }
@@ -101,5 +98,5 @@ public class DetalleOrdenREST {
         System.out.println(detalleOrdenFacade.findAll());
         return detalleOrdenFacade.findAll();
     }
-
+    
 }

@@ -14,6 +14,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.jpa.JpaHelper;
 
 /**
  *
@@ -55,7 +58,14 @@ public class DetalleOrdenFacade extends AbstractFacade<DetalleOrden> {
                  .setParameter("id", id).getResultList();
      }
      
+     public void elim(Integer id){
+         em.createQuery("DELETE FROM DetalleOrden a WHERE a.detalleOrdenPK.id=:id")
+                 .setParameter("id", id)
+                 .executeUpdate();
+     }
+    @EJB 
     DetalleOrdenFacade detalleOrdenFacade;
+    @EJB
     ProductoFacade productoFacade;
      public Response EditarOrden(Orden orden,List<DetalleOrden> lst){
             for (DetalleOrden lst1 : lst) {
