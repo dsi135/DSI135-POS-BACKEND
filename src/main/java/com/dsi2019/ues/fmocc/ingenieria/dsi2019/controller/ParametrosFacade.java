@@ -29,4 +29,15 @@ public class ParametrosFacade extends AbstractFacade<Parametros> {
         super(Parametros.class);
     }
     
+    public boolean exist(Integer id){
+        return executeQuery("SELECT COUNT(c) FROM Parametros p WHERE p.id=:id")
+                .setParameter("id", id).getSingleResult().toString().equals("1");
+    }
+    
+    public boolean Preparado(Integer id){
+        return executeQuery("SELECT DISTINCT p.nombre ,d.cantidad FROM Orden o , Producto p , DetalleOrden d WHERE d.detalleOrdenPK.producto=p.id AND p.preparado=1 AND d.detalleOrdenPK.id=:id")
+                .setParameter("id", id).toString().equals("SI");
+    }
+    
+    
 }

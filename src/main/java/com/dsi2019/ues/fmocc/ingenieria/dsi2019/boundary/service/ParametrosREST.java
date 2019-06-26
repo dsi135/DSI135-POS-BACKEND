@@ -32,14 +32,18 @@ public class ParametrosREST {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public void create(Parametros entity) {
-        parametrosFacade.create(entity);
+        if (entity!=null) {
+            parametrosFacade.create(entity);
+        }
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, Parametros entity) {
-        parametrosFacade.edit(entity);
+        if (parametrosFacade.exist(id)&& entity!=null) {
+            parametrosFacade.edit(entity);
+        }
     }
 
     @GET

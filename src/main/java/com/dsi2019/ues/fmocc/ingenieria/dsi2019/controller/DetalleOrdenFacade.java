@@ -6,10 +6,14 @@
 package com.dsi2019.ues.fmocc.ingenieria.dsi2019.controller;
 
 import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.DetalleOrden;
+import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.DetalleOrdenPK;
+import com.dsi2019.ues.fmocc.ingenieria.dsi2019.entity.Orden;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -20,6 +24,7 @@ public class DetalleOrdenFacade extends AbstractFacade<DetalleOrden> {
 
     @PersistenceContext(unitName = "com.dsi2019.ues.fmocc.ingenieria_dsi2019_war_1.0-SNAPSHOTPU")
     private EntityManager em;
+    DetalleOrden entity;
 
     @Override
     protected EntityManager getEntityManager() {
@@ -48,5 +53,23 @@ public class DetalleOrdenFacade extends AbstractFacade<DetalleOrden> {
      public List<DetalleOrden> entidad(Integer id){
          return executeQuery("SELECT d FROM DetalleOrden d WHERE d.detalleOrdenPK.id=:id")
                  .setParameter("id", id).getResultList();
+     }
+     
+    DetalleOrdenFacade detalleOrdenFacade;
+    ProductoFacade productoFacade;
+     public Response EditarOrden(Orden orden,List<DetalleOrden> lst){
+            for (DetalleOrden lst1 : lst) {
+                if (productoFacade.exist(lst1.getProducto1().getId())) {
+                    entity = new DetalleOrden();
+                    entity.setCantidad(lst1.getCantidad());
+                    entity.setPrecio(lst1.getCantidad() * lst1.getProducto1().getPrecio());
+                    entity.setDetalleOrdenPK(new DetalleOrdenPK(orden.getId(), lst1.getProducto1().getId()));
+                }
+                detalleOrdenFacade.create(entity);
+            }
+            return Response.status(Response.Status.OK)
+                    .header("Registro Creado", lst.size())
+                    .build();
+         
      }
 }

@@ -42,7 +42,7 @@ public class DetalleOrdenREST {
     OrdenFacade ordenFacade;
     @EJB
     ProductoFacade productoFacade;
-    DetalleOrden entity;
+    Response envio;
     Orden orden;
 
     @POST
@@ -63,55 +63,35 @@ public class DetalleOrdenREST {
             orden.setFecha(new Date());
             orden = ordenFacade.crear(orden);
             System.out.println("orden :" + orden);
-            for (DetalleOrden lst1 : lst) {
-                if (productoFacade.exist(lst1.getProducto1().getId())) {
-                    entity = new DetalleOrden();
-                    entity.setCantidad(lst1.getCantidad());
-                    entity.setPrecio(lst1.getCantidad() * lst1.getProducto1().getPrecio());
-                    entity.setDetalleOrdenPK(new DetalleOrdenPK(orden.getId(), lst1.getProducto1().getId()));
-
-                }
-                detalleOrdenFacade.create(entity);
-            }
-            return Response.status(Response.Status.OK)
-                    .header("Registro Creado", lst.size())
-                    .build();
+            envio=detalleOrdenFacade.EditarOrden(orden, lst);
+            return envio;
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .header("Error al crear", lst.size())
                 .build();
 
     }
-
+    
     @PUT
     @Path("edit/{idOrden}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response edit(List<DetalleOrden> lst) {
-        if (ordenFacade.existe(idOrden) && lst != null) {
-            List<DetalleOrden> esperado = detalleOrdenFacade.entidad(idOrden);
-            if (!esperado.equals("") && esperado != null) {
-                for (DetalleOrden esperado1 : esperado) {
-                    entity = new DetalleOrden();
-                    entity.setDetalleOrdenPK(new DetalleOrdenPK(idOrden, esperado1.getProducto1().getId()));
-                    detalleOrdenFacade.remove(entity);
-                }
-
-                for (DetalleOrden lst1 : lst) {
-                    if (productoFacade.exist(lst1.getProducto1().getId())) {
-                        entity = new DetalleOrden();
-                        entity.setCantidad(lst1.getCantidad());
-                        entity.setPrecio(lst1.getCantidad() * lst1.getProducto1().getPrecio());
-                        entity.setDetalleOrdenPK(new DetalleOrdenPK(idOrden, lst1.getProducto1().getId()));
-                    }
-                    detalleOrdenFacade.edit(entity);
-                }
-                return Response.status(Response.Status.ACCEPTED)
-                        .header("Registro Editado", lst)
-                        .build();
-            }
+    public Response edit(@PathParam("idOrden") Integer id,
+            @QueryParam("mesero") String mesero,
+            @QueryParam("mesa") int mesa,
+            @QueryParam("cliente") String cliente,
+            @QueryParam("observaciones") String observaciones,
+            List<DetalleOrden> lst) {
+        if (mesero!=null && !mesero.equals("") && mesa>0 && ordenFacade.existe(id) && lst!=null && !lst.equals("")) {
+            orden.setCliente(cliente);
+            orden.setMesa(mesa);
+            orden.setMesero(mesero);
+            orden.setObservaciones(observaciones);
+            ordenFacade.edit(orden);
+            envio=detalleOrdenFacade.EditarOrden(orden, lst);
+            return envio;
         }
         return Response.status(Response.Status.NOT_FOUND)
-                .header("Fallo Editado de Registro", lst)
+                .header("Fallo editarOrden", 1)
                 .build();
     }
 

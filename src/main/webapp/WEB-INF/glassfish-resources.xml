@@ -11,4 +11,4 @@
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/dsi2019" object-type="user" pool-name="mysql_dsi2019_SistemaPOSPool"/>
-</resources>
+</resources> 
