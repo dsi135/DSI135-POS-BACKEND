@@ -96,6 +96,13 @@ public class DetalleOrdenREST {
     }
 
     @GET
+    @Path("stats")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List stats() {
+        return detalleOrdenFacade.estadisticas();
+    }
+
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<DetalleOrden> findAll() {
         System.out.println(detalleOrdenFacade.findAll());

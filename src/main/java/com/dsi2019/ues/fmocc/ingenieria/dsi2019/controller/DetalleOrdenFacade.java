@@ -58,4 +58,8 @@ public class DetalleOrdenFacade extends AbstractFacade<DetalleOrden> {
                 .executeUpdate();
     }
 
+    public List estadisticas(){
+        return executeQuery("SELECT m.producto1.nombre, SUM(m.cantidad), SUM(m.precio) FROM DetalleOrden m GROUP BY m.producto1.nombre")
+                .getResultList();
+    }
 }
